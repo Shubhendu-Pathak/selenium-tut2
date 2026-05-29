@@ -38,26 +38,39 @@ public class WebTableSort {
 	  List<String> sortedList = originalList.stream().sorted().collect(Collectors.toList());
 	  System.out.println(sortedList);
 	  
-	        //
-	        // compare original list vs sorted list
 	        
-//	     Assert.assertTrue(originalList.equals(sortedList));
+// compare original list vs sorted list
+	        
+//	   Assert.assertTrue(originalList.equals(sortedList));
 	     
 //	      print price of a vegetable
 	        
-	     
-	  
-	     List<WebElement> rows = driver.findElements(By.xpath("//tr/td[1]"));
-
-	   List<String> price = rows.stream().filter(s -> s.getText().contains("Rice")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
-
-System.out.println(rows);
+ List<String> price = elementsList.stream().filter(s -> s.getText().contains("Carrot")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
 System.out.println(price);
 	   
+price.forEach(a -> System.out.println(a));
 
+// what if price not found in result then click on next button and search again
 
+	 
+do {
+	
+	 price = elementsList.stream().filter(s -> s.getText().contains("Carrot")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
+	 System.out.println(price);
+	 
+	 if(price.size()<1 )
 
-	     }
+	 {
+
+		 
+	 driver.findElement(By.cssSelector("[aria-label='Next']")).click();
+
+	 }
+	
+}while(price.size() < 1);
+	
+
+}
 	    
 	     
 	
