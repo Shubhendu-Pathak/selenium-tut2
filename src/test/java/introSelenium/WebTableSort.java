@@ -9,186 +9,66 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.Assert;
 
+import introSelenium3.introSelenium3.WebSortStream;
+
 public class WebTableSort {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		
+
 		  System.setProperty("webdriver.chrome.driver",
 	                "D:\\chrome_downloads\\chromedriver-folder\\chromedriver-win64\\chromedriver.exe");
 	        WebDriver driver = new ChromeDriver();
 	        driver.get("https://rahulshettyacademy.com/greenkart/#/offers");
 	        
-//	        click on column
-	     
-//	        driver.findElement(By.xpath("//tr/th[1]")).click();  
+//	         click on column
+//	        driver.findElement(By.xpath("//tr/th[1]")).click();
 	        
-	     // capture all webelements into list
+//	         capture all element in first column
 	        
-	        List<WebElement> elementsList = driver.findElements(By.xpath("//tr/td[1]"));	        
+	        List<WebElement> elementsList = driver.findElements(By.xpath("//tr/td[1]"));
 	        System.out.println(elementsList);
 	        
-	  // capture text of all webelements into new(original) list
+//	         capture text 
 	        
-	        List<String> originalList = elementsList.stream().map(s -> s.getText()).collect(Collectors.toList());
-	        System.out.println(originalList);
+	        List<String> originalList = elementsList.stream().map(s->s.getText()).collect(Collectors.toList());
+//	        System.out.println(originalList);
 	        
-	   // sort on the original list of step 3 -> sorted list
+	        // sort the list
 	        
-	  List<String> sortedList = originalList.stream().sorted().collect(Collectors.toList());
-	  System.out.println(sortedList);
-	  
+	        List<String> sortedList = originalList.stream().sorted().collect(Collectors.toList());
+//	        System.out.println(sortedList);
 	        
-// compare original list vs sorted list
+//	         print price of list
 	        
-//	   Assert.assertTrue(originalList.equals(sortedList));
-	     
-//	      print price of a vegetable
-	        
- List<String> price = elementsList.stream().filter(s -> s.getText().contains("Carrot")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
-System.out.println(price);
-	   
-price.forEach(a -> System.out.println(a));
+	        List<String> price;
 
-// what if price not found in result then click on next button and search again
+	        do {
+	            List<WebElement> rows = driver.findElements(By.xpath("//tr/td[1]"));
 
-	 
-do {
+	            price = rows.stream()
+	                    .filter(row -> row.getText().contains("Almond"))
+	                    .map(WebTableSort::getPrice)
+	                    .collect(Collectors.toList());
+
+	            if (price.size() < 1) {
+	                driver.findElement(By.cssSelector("[aria-label='Next']")).click();
+	            }
+
+	        } while (price.size() < 1);
+
+	        Assert.assertTrue(price.size() > 0);
+//	        System.out.println("Price of Almond = " + price.get(0));
+	        System.out.println(price);
+	        
+		
+	}
 	
-	 price = elementsList.stream().filter(s -> s.getText().contains("Carrot")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
-	 System.out.println(price);
-	 
-	 if(price.size()<1 )
-
-	 {
-
-		 
-	 driver.findElement(By.cssSelector("[aria-label='Next']")).click();
-
-	 }
-	
-}while(price.size() < 1);
-	
-
+	private static String getPrice(WebElement s) {
+		String val =  s.findElement(By.xpath("following-sibling::td[1]")).getText();
+		return val;
+	}
 }
-	    
 	     
 	
 	
-    private static String getPriceVeggie(WebElement s) {
-
-   	// TODO Auto-generated method stub
-
-   	String pricevalue = s.findElement(By.xpath("following-sibling::td[1]")).getText();
-
-   	return pricevalue;
-
-   	}
-
-}
-
-
-//import java.util.List;
-//
-//import java.util.stream.Collectors;
-//
-//
-//
-//import org.openqa.selenium.By;
-//
-//import org.openqa.selenium.WebDriver;
-//
-//import org.openqa.selenium.WebElement;
-//
-//import org.openqa.selenium.chrome.ChromeDriver;
-//
-//import org.testng.Assert;
-//
-//
-//
-//public class LiveDemo {
-
-//public static void main(String[] args) throws InterruptedException {
-//
-//// TODO Auto-generated method stub
-//
-//System.setProperty("webdriver.chrome.driver", "C://chromedriver.exe");
-//
-//WebDriver driver = new ChromeDriver();
-//
-//driver.get("https://rahulshettyacademy.com/greenkart/#/offers");
-//
-// click on column
-//
-//driver.findElement(By.xpath("//tr/th[1]")).click();
-//
-//
-//
-//// capture all webelements into list
-//
-//List<WebElement> elementsList = driver.findElements(By.xpath("//tr/td[1]"));
-//
-//
-//
-//// capture text of all webelements into new(original) list
-//
-//List<String> originalList = elementsList.stream().map(s -> s.getText()).collect(Collectors.toList());
-//
-//
-//
-//// sort on the original list of step 3 -> sorted list
-//
-//
-//
-//List<String> sortedList = originalList.stream().sorted().collect(Collectors.toList());
-//
-//// compare original list vs sorted list
-//
-//Assert.assertTrue(originalList.equals(sortedList));
-//
-//List<String> price;
-//
-//// scan the name column with getText ->Beans->print the price of the Rice
-//
-//do
-//
-//{
-//
-//List<WebElement> rows = driver.findElements(By.xpath("//tr/td[1]"));
-//
-//price = rows.stream().filter(s -> s.getText().contains("Rice"))
-//
-//.map(s -> getPriceVeggie(s)).collect(Collectors.toList());
-//
-//
-//price.forEach(a -> System.out.println(a));
-//
-//if(price.size()<1)
-//
-//{
-//
-//driver.findElement(By.cssSelector("[aria-label='Next']")).click();
-//
-//}
-//
-//}while(price.size()<1);
-//
-//
-//
-//}
-//
-//
-//
-//private static String getPriceVeggie(WebElement s) {
-//
-//// TODO Auto-generated method stub
-//
-//String pricevalue = s.findElement(By.xpath("following-sibling::td[1]")).getText();
-//
-//
-//
-//return pricevalue;
-//
-//}
-//
-//}
